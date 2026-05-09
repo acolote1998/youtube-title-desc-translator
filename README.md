@@ -1,4 +1,4 @@
-# Easy Repo – YouTube Translation Automation (Playwright)
+# YouTube Title and Description Translation Automation (Playwright)
 
 This project automates YouTube Studio translations using Playwright.
 
