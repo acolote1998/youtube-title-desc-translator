@@ -4,6 +4,11 @@ import path from 'path';
 
 let hashtags = "\n \n #sourdoughstarter #recipe #sourdoughtok #breadtok #stepbystep #sourdoughbread #sourdoughstarter #bread #breadbaking #sourdoughrecipe #baking #sourdoughscoring #sourdoughtips #breadmaking #homebaker #povcooking #foodasmr #breadasmr #oddlysatisfying #fyp #foryou #surdeig #surdeigsbröd #pan #panmasamadre #masamadre #pandemasamadre #starter #feedingstarter #sourdoughstarter #Sauerteig #BrotBacken #Hausgemacht #RotiSourdough #MasakDiRumah #ResepRoti #Surdegsbröd #BakaHemma #BrödBakning #khamir #roti #khamirroti #ghar #par #baking #gharpar #gharparbaking #olives #aceitunas #Oliven #Zaitun #Oliver #zaitoon"
 
+const videoLink =
+  "https://studio.youtube.com/video/3J3aJFc81Zw/edit";
+
+const videoId = videoLink.split("/")[4];
+
 type TraduccionYoutube = {
   idiomaEnYoutube:
   string
@@ -19,15 +24,39 @@ async function cargarTraducciones(): Promise<
 > {
   log("📂 Cargando traducciones JSON...");
 
-  const filePath = path.join(
+  const filePath1 = path.join(
     process.cwd(),
     "tests",
-    "translations.json"
+    "translations1.json"
   );
 
-  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const fileContent1 = fs.readFileSync(filePath1, "utf-8");
 
-  const data = JSON.parse(fileContent);
+  const filePath2 = path.join(
+    process.cwd(),
+    "tests",
+    "translations2.json"
+  );
+
+  const fileContent2 = fs.readFileSync(filePath1, "utf-8");
+
+  const filePath3 = path.join(
+    process.cwd(),
+    "tests",
+    "translations3.json"
+  );
+
+  const fileContent3 = fs.readFileSync(filePath1, "utf-8");
+
+  const filePath4 = path.join(
+    process.cwd(),
+    "tests",
+    "translations4.json"
+  );
+
+  const fileContent4 = fs.readFileSync(filePath1, "utf-8");
+
+  const data = { ...JSON.parse(fileContent1), ...JSON.parse(fileContent2), ...JSON.parse(fileContent3), ...JSON.parse(fileContent4) };
 
   log(`✅ Traducciones cargadas: ${data.length}`);
 
@@ -58,10 +87,7 @@ function cleanCookies(cookies: any[]) {
 }
 
 test('YouTube with cleaned cookies', async () => {
-  const videoLink =
-    "https://studio.youtube.com/video/s0H9x1B9IW4/translations";
 
-  const videoId = videoLink.split("/")[4];
 
   log(`🎬 Video ID: ${videoId}`);
 
