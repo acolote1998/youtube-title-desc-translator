@@ -44,7 +44,7 @@ They are saved as JSON files and loaded into the Playwright browser context.
 
 ## Hashtags
 
-A fixed hashtag block is appended to every non-English description to improve reach and discoverability.
+A fixed hashtag block is appended to every description to improve reach and discoverability.
 
 ---
 

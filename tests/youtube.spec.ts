@@ -153,7 +153,7 @@ test('YouTube with cleaned cookies', async () => {
     .getByRole("textbox", {
       name: "Cuenta a los usuarios de qué",
     })
-    .fill(english.descriptionTraducida);
+    .fill(english.descriptionTraducida + hashtags);
 
   await page
     .getByRole("button", { name: "Guardar" })
