@@ -173,22 +173,7 @@ test('YouTube with cleaned cookies', async () => {
   await page.waitForTimeout(7000);
 
   for (const translation of traducciones) {
-    if (
-      translation.idiomaEnYoutube === "Inglés" ||
-      translation.idiomaEnYoutube === "Alemán" ||
-      translation.idiomaEnYoutube === "Español" ||
-      translation.idiomaEnYoutube === "Francés" ||
-      translation.idiomaEnYoutube === "Griego" ||
-      translation.idiomaEnYoutube === "Hindi" ||
-      translation.idiomaEnYoutube === "Indonesio" ||
-      translation.idiomaEnYoutube === "Inglés (idioma del vídeo)" ||
-      translation.idiomaEnYoutube === "Italiano" ||
-      translation.idiomaEnYoutube === "Neerlandés" ||
-      translation.idiomaEnYoutube === "Ruso" ||
-      translation.idiomaEnYoutube === "Sueco" ||
-      translation.idiomaEnYoutube === "Turco" ||
-      translation.idiomaEnYoutube === "Árabe"
-    ) continue;
+    if (translation.idiomaEnYoutube === "Inglés") continue;
 
     log(`🌍 Procesando idioma: ${translation.idiomaEnYoutube}`);
 
