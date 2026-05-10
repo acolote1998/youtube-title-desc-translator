@@ -54,9 +54,9 @@ The script uses a JSON array with this structure:
 
 [
 {
-"idiomaEnYoutube": "",
-"tituloTraducido": "",
-"descriptionTraducida": ""
+"languageInYoutube": "",
+"translatedTitle": "",
+"translatedDescription": ""
 }
 ]
 

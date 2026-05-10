@@ -1,5 +1,20 @@
-node_modules
-test-results
-tests/youtube-cookies.json
-tests/google-cookies.json
-tests/hashtags.ts
+# dependencies
+node_modules/
+
+# Playwright / test outputs
+test-results/
+playwright-report/
+playwright/.cache/
+
+# build outputs (if you ever add build step)
+dist/
+build/
+
+# OS / editor
+.DS_Store
+.vscode/
+
+# secrets / sensitive test data
+utils/cookies/youtube-cookies.json
+utils/cookies/google-cookies.json
+utils/hashtags.ts

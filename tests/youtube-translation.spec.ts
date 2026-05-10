@@ -1,19 +1,17 @@
 import { test, chromium } from '@playwright/test';
 import fs from "fs";
 import path from 'path';
-import { hashtags } from './hashtags';
-import { cargarTraducciones, cleanCookies, goToTranslations, log, pressTab } from './utils';
+import { hashtags } from '../utils/hashtags';
+import { cargarTraducciones, cleanCookies, goToTranslations, log, pressTab } from '../utils/utils'
 
-const translateTheEnglish: boolean = false
+const translateEnglishLanguage: boolean = false
 
 const videoLink =
   "https://studio.youtube.com/video/3J3aJFc81Zw/translations";
 
-
 test('Publish missing YouTube Studio translations', async () => {
 
   const videoId = videoLink.split("/")[4];
-
 
   log(`🎬 Video ID: ${videoId}`);
 
@@ -55,13 +53,13 @@ test('Publish missing YouTube Studio translations', async () => {
 
   await page.waitForTimeout(6000);
 
-  if (!translateTheEnglish) {
-    traducciones = traducciones.filter((traduccion) => { return traduccion.idiomaEnYoutube !== "Inglés" })
+  if (!translateEnglishLanguage) {
+    traducciones = traducciones.filter((traduccion) => { return traduccion.languageInYoutube !== "Inglés" })
   }
   else {
 
     const english = traducciones.find(
-      t => t.idiomaEnYoutube === "Inglés"
+      t => t.languageInYoutube === "Inglés"
     );
 
     if (english) {
@@ -77,13 +75,13 @@ test('Publish missing YouTube Studio translations', async () => {
         .getByRole("textbox", {
           name: "Añade un título que describa",
         })
-        .fill(english.tituloTraducido);
+        .fill(english.translatedTitle);
 
       await page
         .getByRole("textbox", {
           name: "Cuenta a los usuarios de qué",
         })
-        .fill(english.descriptionTraducida + hashtags);
+        .fill(english.translatedDescription + hashtags);
 
       await page
         .getByRole("button", { name: "Guardar" })
@@ -97,22 +95,21 @@ test('Publish missing YouTube Studio translations', async () => {
   for (const translation of traducciones) {
     try {
 
-
-      if (translation.idiomaEnYoutube === "Inglés") {
+      if (translation.languageInYoutube === "Inglés") {
         continue;
       }
 
-      log(`🌍 Procesando idioma: ${translation.idiomaEnYoutube}`);
+      log(`🌍 Procesando idioma: ${translation.languageInYoutube}`);
 
       const languageExists = await page
         .locator('div.language-text')
-        .filter({ hasText: translation.idiomaEnYoutube })
+        .filter({ hasText: translation.languageInYoutube })
         .first()
         .isVisible()
         .catch(() => false)
 
       if (languageExists) {
-        log(`❌ ${translation.idiomaEnYoutube} already translated, skipping...`);
+        log(`❌ ${translation.languageInYoutube} already translated, skipping...`);
         continue
       }
 
@@ -126,15 +123,15 @@ test('Publish missing YouTube Studio translations', async () => {
         .getByRole("button", { name: "Añadir idioma" })
         .click({ timeout: 5000 });
 
-      await page.keyboard.type(translation.idiomaEnYoutube[0])
-      await page.keyboard.type(translation.idiomaEnYoutube[1])
-      await page.keyboard.type(translation.idiomaEnYoutube[2])
-      await page.keyboard.type(translation.idiomaEnYoutube[3])
+      await page.keyboard.type(translation.languageInYoutube[0])
+      await page.keyboard.type(translation.languageInYoutube[1])
+      await page.keyboard.type(translation.languageInYoutube[2])
+      await page.keyboard.type(translation.languageInYoutube[3])
       await page.keyboard.press("Enter");
 
       const languageRow = page
         .locator("tr#row-container")
-        .filter({ hasText: translation.idiomaEnYoutube });
+        .filter({ hasText: translation.languageInYoutube });
 
       await languageRow
         .locator("#cell-container").first()
@@ -146,16 +143,16 @@ test('Publish missing YouTube Studio translations', async () => {
       await page.keyboard.press("Tab");
       await page.keyboard.press("Enter");
 
-      log(`📝 Escribiendo traducción: ${translation.idiomaEnYoutube}`);
+      log(`📝 Escribiendo traducción: ${translation.languageInYoutube}`);
 
       await page
         .getByRole("textbox", { name: "Título*" })
-        .fill(translation.tituloTraducido, { timeout: 5000 });
+        .fill(translation.translatedTitle, { timeout: 5000 });
 
       await page
         .locator("#translated-description")
         .getByRole("textbox", { name: "Descripción" })
-        .fill((translation.descriptionTraducida + hashtags), { timeout: 5000 });
+        .fill((translation.translatedDescription + hashtags), { timeout: 5000 });
 
       await page
         .getByRole("button", { name: "Publicar" })
@@ -163,9 +160,9 @@ test('Publish missing YouTube Studio translations', async () => {
 
       await page.waitForTimeout(7000);
 
-      log(`✅ Publicado: ${translation.idiomaEnYoutube}`);
+      log(`✅ Publicado: ${translation.languageInYoutube}`);
     } catch (error) {
-      log(`❌ Failed: ${translation.idiomaEnYoutube}`);
+      log(`❌ Failed: ${translation.languageInYoutube}`);
       console.error(error);
     }
   }

@@ -1,4 +1,4 @@
-import { TraduccionYoutube } from "./types";
+import { YoutubeTranslation } from "../types/types";
 import fs from "fs";
 import path from 'path';
 
@@ -19,7 +19,7 @@ export const log = (msg: string) =>
     console.log(`\n🧪 ${msg}`);
 
 export async function cargarTraducciones(): Promise<
-    TraduccionYoutube[]
+    YoutubeTranslation[]
 > {
     log("📂 Cargando traducciones JSON...");
 
@@ -33,7 +33,7 @@ export async function cargarTraducciones(): Promise<
     const fileContent3 = fs.readFileSync(filePath3, "utf-8");
     const fileContent4 = fs.readFileSync(filePath4, "utf-8");
 
-    const data: TraduccionYoutube[] = [
+    const data: YoutubeTranslation[] = [
         ...JSON.parse(fileContent1),
         ...JSON.parse(fileContent2),
         ...JSON.parse(fileContent3),
