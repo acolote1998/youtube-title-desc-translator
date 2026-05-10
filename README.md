@@ -19,7 +19,7 @@ English is always set as the base language first, then the script iterates throu
 | `tests/youtube-translation.spec.ts`         | Main Playwright automation script                       |
 | `utils/cookies/youtube-cookies.json`        | Cookies for youtube.com                                 |
 | `utils/cookies/google-cookies.json`         | Cookies for google.com                                  |
-| `utils/translations/translations{1-4}.json` | 4 translation files (split for LLM length limits)       |
+| `utils/translations/translations{1-6}.json` | 6 translation files (split for LLM length limits)       |
 | `utils/hashtags.ts`                         | Fixed hashtag string appended to all descriptions       |
 | `utils/promptForTranslations.txt`           | Reusable prompt for an LLM to generate the translations |
 
@@ -55,7 +55,7 @@ Each entry in the translation JSON files must match this structure:
 - `translatedTitle` — the translated video title
 - `translatedDescription` — the translated video description (hashtags are appended automatically)
 
-Translations are split across 4 files so you can send them to an LLM in separate prompts (free tiers have output length limits).
+Translations are split across 6 files so you can send them to an LLM in separate prompts (free tiers have output length limits).
 
 A ready-to-use prompt is included at `utils/promptForTranslations.txt` — feed it to any LLM along with your original title and description.
 
@@ -70,7 +70,7 @@ A ready-to-use prompt is included at `utils/promptForTranslations.txt` — feed 
 
 1. Export cookies from youtube.com and google.com using EditThisCookie
 2. Place them in `utils/cookies/`
-3. Prepare translations in `utils/translations/translations{1-4}.json`
+3. Prepare translations in `utils/translations/translations{1-6}.json`
 4. Update `videoLink` in the test file to your target video
 5.
 

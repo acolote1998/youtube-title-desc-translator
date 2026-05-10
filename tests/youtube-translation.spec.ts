@@ -7,7 +7,7 @@ import { cargarTraducciones, cleanCookies, goToTranslations, log, pressTab } fro
 const translateEnglishLanguage: boolean = false
 
 const videoLink =
-  "https://studio.youtube.com/video/3J3aJFc81Zw/translations";
+  "https://studio.youtube.com/video/uJQIUjToVHU/translations";
 
 test('Publish missing YouTube Studio translations', async () => {
 
@@ -25,20 +25,18 @@ test('Publish missing YouTube Studio translations', async () => {
   const context = await browser.newContext();
   const page = await context.newPage();
 
-  const testDir = __dirname;
-
   log("🍪 Cargando cookies...");
 
   const youtubeCookies = JSON.parse(
     fs.readFileSync(
-      path.join(testDir, 'youtube-cookies.json'),
+      path.join(process.cwd(), "utils", "cookies", "youtube-cookies.json"),
       'utf-8'
     )
   );
 
   const googleCookies = JSON.parse(
     fs.readFileSync(
-      path.join(testDir, 'google-cookies.json'),
+      path.join(process.cwd(), "utils", "cookies", "google-cookies.json"),
       'utf-8'
     )
   );
