@@ -4,8 +4,10 @@ import path from 'path';
 
 let hashtags = "\n \n #sourdoughstarter #recipe #sourdoughtok #breadtok #stepbystep #sourdoughbread #sourdoughstarter #bread #breadbaking #sourdoughrecipe #baking #sourdoughscoring #sourdoughtips #breadmaking #homebaker #povcooking #foodasmr #breadasmr #oddlysatisfying #fyp #foryou #surdeig #surdeigsbröd #pan #panmasamadre #masamadre #pandemasamadre #starter #feedingstarter #sourdoughstarter #Sauerteig #BrotBacken #Hausgemacht #RotiSourdough #MasakDiRumah #ResepRoti #Surdegsbröd #BakaHemma #BrödBakning #khamir #roti #khamirroti #ghar #par #baking #gharpar #gharparbaking #olives #aceitunas #Oliven #Zaitun #Oliver #zaitoon"
 
+const translateTheEnglish: boolean = false
+
 const videoLink =
-  "https://studio.youtube.com/video/uJQIUjToVHU/edit";
+  "https://studio.youtube.com/video/3J3aJFc81Zw/translations";
 
 const videoId = videoLink.split("/")[4];
 
@@ -15,6 +17,20 @@ type TraduccionYoutube = {
   tituloTraducido: string;
   descriptionTraducida: string;
 };
+
+async function pressTab(page: any, times: number) {
+  for (let i = 0; i < times; i++) {
+    await page.keyboard.press("Tab");
+  }
+}
+
+async function goToTranslations(page: any, videoId: string) {
+  await page.goto(
+    `https://studio.youtube.com/video/${videoId}/translations`
+  );
+
+  await page.waitForSelector('div.language-text');
+}
 
 const log = (msg: string) =>
   console.log(`\n🧪 ${msg}`);
@@ -74,7 +90,7 @@ test('YouTube with cleaned cookies', async () => {
 
   log(`🎬 Video ID: ${videoId}`);
 
-  const traducciones = await cargarTraducciones();
+  let traducciones = await cargarTraducciones();
 
   const browser = await chromium.launch({
     headless: false,
@@ -108,125 +124,123 @@ test('YouTube with cleaned cookies', async () => {
 
   log("🌐 Abriendo YouTube Studio...");
 
-  await page.goto(
-    `https://studio.youtube.com/video/${videoId}/translations`
-  );
+  await goToTranslations(page, videoId);
 
-  const english = traducciones.find(
-    t => t.idiomaEnYoutube === "Inglés"
-  );
+  await page.waitForTimeout(6000);
 
-  if (!english) {
-    throw new Error("No English translation found");
+  if (!translateTheEnglish) {
+    traducciones = traducciones.filter((traduccion) => { return traduccion.idiomaEnYoutube !== "Inglés" })
   }
+  else {
 
-  await page.waitForTimeout(3000);
-
-  log("✏️ Editando título y descripción en inglés...");
-
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Enter");
-
-  await page
-    .getByRole("textbox", {
-      name: "Añade un título que describa",
-    })
-    .fill(english.tituloTraducido);
-
-  await page
-    .getByRole("textbox", {
-      name: "Cuenta a los usuarios de qué",
-    })
-    .fill(english.descriptionTraducida + hashtags);
-
-  await page
-    .getByRole("button", { name: "Guardar" })
-    .click({ timeout: 5000 });
-
-  log("💾 Guardado idioma inglés");
-
-  await page.waitForTimeout(7000);
-
-  for (const translation of traducciones) {
-    if (translation.idiomaEnYoutube === "Inglés") continue;
-
-    log(`🌍 Procesando idioma: ${translation.idiomaEnYoutube}`);
-
-    await page.goto(
-      `https://studio.youtube.com/video/${videoId}/translations`
+    const english = traducciones.find(
+      t => t.idiomaEnYoutube === "Inglés"
     );
 
-    await page
-      .getByRole("menuitem", { name: "Subtítulos" })
-      .click({ timeout: 5000 });
+    if (english) {
 
-    await page
-      .getByRole("button", { name: "Añadir idioma" })
-      .click({ timeout: 5000 });
+      await page.waitForTimeout(3000);
 
-    await page.keyboard.type(translation.idiomaEnYoutube[0])
-    await page.keyboard.type(translation.idiomaEnYoutube[1])
-    await page.keyboard.type(translation.idiomaEnYoutube[2])
-    await page.keyboard.type(translation.idiomaEnYoutube[3])
-    await page.keyboard.press("Enter");
+      log("✏️ Editando título y descripción en inglés...");
 
-    const languageRow = page
-      .locator("tr#row-container")
-      .filter({ hasText: translation.idiomaEnYoutube });
+      await pressTab(page, 26)
+      await page.keyboard.press("Enter");
 
-    await languageRow
-      .locator("#cell-container").first()
-      .focus();
+      await page
+        .getByRole("textbox", {
+          name: "Añade un título que describa",
+        })
+        .fill(english.tituloTraducido);
 
-    await page.waitForTimeout(1000);
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Enter");
+      await page
+        .getByRole("textbox", {
+          name: "Cuenta a los usuarios de qué",
+        })
+        .fill(english.descriptionTraducida + hashtags);
 
-    log(`📝 Escribiendo traducción: ${translation.idiomaEnYoutube}`);
+      await page
+        .getByRole("button", { name: "Guardar" })
+        .click({ timeout: 5000 });
 
-    await page
-      .getByRole("textbox", { name: "Título*" })
-      .fill(translation.tituloTraducido, { timeout: 5000 });
+      log("💾 Guardado idioma inglés");
 
-    await page
-      .locator("#translated-description")
-      .getByRole("textbox", { name: "Descripción" })
-      .fill((translation.descriptionTraducida + hashtags), { timeout: 5000 });
+      await page.waitForTimeout(7000);
+    }
+  }
+  for (const translation of traducciones) {
+    try {
 
-    await page
-      .getByRole("button", { name: "Publicar" })
-      .click({ timeout: 5000 });
 
-    await page.waitForTimeout(7000);
+      if (translation.idiomaEnYoutube === "Inglés") {
+        continue;
+      }
 
-    log(`✅ Publicado: ${translation.idiomaEnYoutube}`);
+      log(`🌍 Procesando idioma: ${translation.idiomaEnYoutube}`);
+
+      const languageExists = await page
+        .locator('div.language-text')
+        .filter({ hasText: translation.idiomaEnYoutube })
+        .first()
+        .isVisible()
+        .catch(() => false)
+
+      if (languageExists) {
+        console.log(`❌ ${translation.idiomaEnYoutube} already translated, skipping...`);
+        continue
+      }
+
+      await goToTranslations(page, videoId);
+
+      await page
+        .getByRole("menuitem", { name: "Subtítulos" })
+        .click({ timeout: 5000 });
+
+      await page
+        .getByRole("button", { name: "Añadir idioma" })
+        .click({ timeout: 5000 });
+
+      await page.keyboard.type(translation.idiomaEnYoutube[0])
+      await page.keyboard.type(translation.idiomaEnYoutube[1])
+      await page.keyboard.type(translation.idiomaEnYoutube[2])
+      await page.keyboard.type(translation.idiomaEnYoutube[3])
+      await page.keyboard.press("Enter");
+
+      const languageRow = page
+        .locator("tr#row-container")
+        .filter({ hasText: translation.idiomaEnYoutube });
+
+      await languageRow
+        .locator("#cell-container").first()
+        .focus();
+
+      await page.waitForTimeout(1000);
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Enter");
+
+      log(`📝 Escribiendo traducción: ${translation.idiomaEnYoutube}`);
+
+      await page
+        .getByRole("textbox", { name: "Título*" })
+        .fill(translation.tituloTraducido, { timeout: 5000 });
+
+      await page
+        .locator("#translated-description")
+        .getByRole("textbox", { name: "Descripción" })
+        .fill((translation.descriptionTraducida + hashtags), { timeout: 5000 });
+
+      await page
+        .getByRole("button", { name: "Publicar" })
+        .click({ timeout: 5000 });
+
+      await page.waitForTimeout(7000);
+
+      log(`✅ Publicado: ${translation.idiomaEnYoutube}`);
+    } catch (error) {
+      console.log(`❌ Failed: ${translation.idiomaEnYoutube}`);
+      console.error(error);
+    }
   }
 
   await browser.close();
