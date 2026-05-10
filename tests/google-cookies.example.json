@@ -1,0 +1,32 @@
+[
+    {
+        "domain": ".google.com",
+        "name": "__Secure-1PSID",
+        "value": "YOUR_VALUE_HERE",
+        "path": "/",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "expirationDate": 0
+    },
+    {
+        "domain": ".google.com",
+        "name": "SID",
+        "value": "YOUR_VALUE_HERE",
+        "path": "/",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "expirationDate": 0
+    },
+    {
+        "domain": ".google.com",
+        "name": "HSID",
+        "value": "YOUR_VALUE_HERE",
+        "path": "/",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "expirationDate": 0
+    }
+]

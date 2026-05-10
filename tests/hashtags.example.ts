@@ -1,0 +1,1 @@
+export const hashtags = "include your hashtags here"
