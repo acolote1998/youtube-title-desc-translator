@@ -1,88 +1,84 @@
-# YouTube Title and Description Translation Automation (Playwright)
+# YouTube Title & Description Translator
 
-This project automates YouTube Studio translations using Playwright.
+Automates YouTube Studio video title and description translations using Playwright.
 
-It:
+## What It Does
 
-- Loads YouTube video translation page
-- Uses saved cookies for authentication
-- Reads translations from a JSON file
-- Fills title and description for multiple languages
-- Publishes each translation automatically
+1. Loads saved cookies to authenticate the session
+2. Opens a video's translation page on YouTube Studio
+3. Reads pre-translated titles and descriptions from JSON files
+4. Appends a fixed hashtag block to every description
+5. Publishes each translation — one language at a time
 
----
+English is always set as the base language first, then the script iterates through the remaining languages.
 
-## Structure
+## Key Files
 
-tests/
-youtube-cookies.json
-google-cookies.json
-translations.json
-test file (Playwright script)
+| File                                        | Purpose                                                 |
+| ------------------------------------------- | ------------------------------------------------------- |
+| `tests/youtube-translation.spec.ts`         | Main Playwright automation script                       |
+| `utils/cookies/youtube-cookies.json`        | Cookies for youtube.com                                 |
+| `utils/cookies/google-cookies.json`         | Cookies for google.com                                  |
+| `utils/translations/translations{1-4}.json` | 4 translation files (split for LLM length limits)       |
+| `utils/hashtags.ts`                         | Fixed hashtag string appended to all descriptions       |
+| `utils/promptForTranslations.txt`           | Reusable prompt for an LLM to generate the translations |
 
----
+## How Cookies Work
 
-## Cookies
+The script uses saved cookies to skip manual login. You need to export cookies yourself.
 
-Cookies are extracted manually from youtube.com and google.com using the EditThisCookie Chrome extension.
+1. Install the [EditThisCookie](https://chromewebstore.google.com/detail/editthiscookie-v2/dbknbjeeaaicdjkgidnnbihckajabjbg) Chrome extension
+2. Export cookies as JSON from **both** domains:
+   - `youtube.com`
+   - `google.com`
+3. Save them to:
+   - `utils/cookies/youtube-cookies.json`
+   - `utils/cookies/google-cookies.json`
 
-They are saved as JSON files and loaded into the Playwright browser context.
+Example cookie files are provided at `utils/cookies/*.example.json`.
 
----
+## Input JSON Format
 
-## What the script does
+Each entry in the translation JSON files must match this structure:
 
-- Opens YouTube Studio translation page for a video
-- Logs in using cookies
-- Sets English title and description first
-- Loops through all other languages
-- Fills translated title and description
-- Appends hashtags to descriptions
-- Publishes each translation
-
----
-
-## Hashtags
-
-A fixed hashtag block is appended to every description to improve reach and discoverability.
-
----
-
-## Translation input
-
-The script uses a JSON array with this structure:
-
+```json
 [
-{
-"languageInYoutube": "",
-"translatedTitle": "",
-"translatedDescription": ""
-}
+  {
+    "languageInYoutube": "",
+    "translatedTitle": "",
+    "translatedDescription": ""
+  }
 ]
+```
 
----
+- `languageInYoutube` — must match the language name as it appears in YouTube Studio (e.g. `"Inglés"`, `"Alemán"`, `"Español"`, `"Hindi"`, `"Indonesio"`)
+- `translatedTitle` — the translated video title
+- `translatedDescription` — the translated video description (hashtags are appended automatically)
 
-## Rules
+Translations are split across 4 files so you can send them to an LLM in separate prompts (free tiers have output length limits).
 
-- Output JSON only for translations generation
-- Do not translate hashtags
-- Keep meaning and tone natural for YouTube Shorts
-- Use \n when line breaks are needed
-- Must include all required languages
+A ready-to-use prompt is included at `utils/promptForTranslations.txt` — feed it to any LLM along with your original title and description.
 
----
+## Configuration Notes
 
-## Supported languages
+- The repo is configured for YouTube Studio in **Spanish**. Locator text (button names, labels) matches the Spanish interface.
+- The author's YouTube content is in English, but the browser locale is set to `es-ES`.
+- If your YouTube Studio uses a different language, you may need to update locator strings in the Playwright script (e.g. `"Añadir idioma"`, `"Publicar"`, `"Guardar"`).
+- The script runs with `headless: false` so you can watch the automation.
 
-English, German, Spanish, Hindi, Indonesian, Swedish, Greek, Italian, Turkish, Dutch, Russian, Arabic, French
+## Usage
 
----
+1. Export cookies from youtube.com and google.com using EditThisCookie
+2. Place them in `utils/cookies/`
+3. Prepare translations in `utils/translations/translations{1-4}.json`
+4. Update `videoLink` in the test file to your target video
+5.
 
-## Flow
+```bash
+npm install
+npx playwright install chromium
+```
 
-1. Load cookies
-2. Open YouTube Studio video translations page
-3. Fill English version first
-4. Loop all other languages
-5. Fill title + description
-6. Publish each one
+```bash
+npm run test
+```

@@ -1,0 +1,105 @@
+You will be provided with a YouTube Shorts title and description in English or Spanish.
+
+Your task is to translate both into the following languages:
+
+- Inglés (retain or lightly optimize original)
+- Alemán
+- Español  
+- Hindi  
+- Indonesio  
+
+---
+
+## Output requirements
+
+Return ONLY the final result as a valid JSON array.
+
+Each object in the array must strictly follow this structure:
+
+[
+  {
+    "languageInYoutube": "",
+    "translatedTitle": "",
+    "translatedDescription": ""
+  }
+]
+
+---
+
+## Allowed values for "languageInYoutube"
+
+Use exactly the languages listed above, for example:
+
+- "Inglés"
+- "Alemán"
+- "Español"
+- etc
+
+---
+
+## Important rules
+
+- DO NOT add any text outside the JSON
+- The result must be valid and parseable JSON
+- Preserve meaning, tone, and engagement level appropriate for YouTube Shorts
+- DO NOT translate hashtags. If hashtags are found, remove them from the translation
+- Properly escape special characters within JSON
+- Use line breaks with \n when necessary
+- Do not use trailing commas
+- Return all requested languages
+
+---
+
+## Unit conversion rules (IMPORTANT)
+
+### 1. General conversion
+- Convert measurements, temperatures, weights, volumes, currencies, and distances to the most natural system for each language/region
+- Prioritize local conventions
+
+### 2. Clarity
+- If helpful, include the original unit in parentheses
+
+Examples:
+- 500 g (approx. 18 oz)
+- 200°C (392°F)
+
+### 3. English rule
+- In English ALWAYS include both metric and imperial units
+
+### 4. Rounding
+- Use easy-to-read numbers
+- Avoid excessive precision
+
+### 5. Sensitive precision
+Do NOT aggressively round:
+- salt
+- baking powder
+- baking soda
+- yeast
+- spices
+
+### 6. Consistency
+- Keep units consistent within each language
+
+---
+
+## Output example
+
+[
+  {
+    "languageInYoutube": "Español",
+    "translatedTitle": "La receta más fácil del mundo",
+    "translatedDescription": "Haz esta receta increíble en solo 10 minutos #food #recipe"
+  },
+  {
+    "languageInYoutube": "Inglés",
+    "translatedTitle": "The easiest recipe in the world",
+    "translatedDescription": "Make this incredible recipe in just 10 minutes #food #recipe"
+  }
+]
+
+---
+
+TITLE TO TRANSLATE: { }
+
+DESCRIPTION TO TRANSLATE: { }
