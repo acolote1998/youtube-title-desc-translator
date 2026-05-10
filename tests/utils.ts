@@ -1,0 +1,69 @@
+import { TraduccionYoutube } from "./types";
+import fs from "fs";
+import path from 'path';
+
+export async function pressTab(page: any, times: number) {
+    for (let i = 0; i < times; i++) {
+        await page.keyboard.press("Tab");
+    }
+}
+export async function goToTranslations(page: any, videoId: string) {
+    await page.goto(
+        `https://studio.youtube.com/video/${videoId}/translations`
+    );
+
+    await page.waitForSelector('div.language-text');
+}
+
+export const log = (msg: string) =>
+    console.log(`\n🧪 ${msg}`);
+
+export async function cargarTraducciones(): Promise<
+    TraduccionYoutube[]
+> {
+    log("📂 Cargando traducciones JSON...");
+
+    const filePath1 = path.join(process.cwd(), "tests", "translations1.json");
+    const filePath2 = path.join(process.cwd(), "tests", "translations2.json");
+    const filePath3 = path.join(process.cwd(), "tests", "translations3.json");
+    const filePath4 = path.join(process.cwd(), "tests", "translations4.json");
+
+    const fileContent1 = fs.readFileSync(filePath1, "utf-8");
+    const fileContent2 = fs.readFileSync(filePath2, "utf-8");
+    const fileContent3 = fs.readFileSync(filePath3, "utf-8");
+    const fileContent4 = fs.readFileSync(filePath4, "utf-8");
+
+    const data: TraduccionYoutube[] = [
+        ...JSON.parse(fileContent1),
+        ...JSON.parse(fileContent2),
+        ...JSON.parse(fileContent3),
+        ...JSON.parse(fileContent4),
+    ];
+
+    log(`✅ Traducciones cargadas: ${data.length}`);
+
+    return data;
+}
+
+export function cleanCookies(cookies: any[]) {
+    return cookies.map(c => {
+        const cleaned: any = {
+            name: c.name,
+            value: c.value,
+            domain: c.domain,
+            path: c.path || '/',
+            secure: c.secure,
+            httpOnly: c.httpOnly,
+        };
+
+        if (c.sameSite === 'no_restriction') cleaned.sameSite = 'None';
+        else if (c.sameSite === 'lax') cleaned.sameSite = 'Lax';
+        else if (c.sameSite === 'strict') cleaned.sameSite = 'Strict';
+
+        if (c.expirationDate) {
+            cleaned.expires = c.expirationDate;
+        }
+
+        return cleaned;
+    });
+}
