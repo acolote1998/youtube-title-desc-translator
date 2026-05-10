@@ -4,10 +4,10 @@ import path from 'path';
 import { hashtags } from '../utils/hashtags';
 import { cargarTraducciones, cleanCookies, goToTranslations, log, pressTab } from '../utils/utils'
 
-const translateEnglishLanguage: boolean = false
+const translateEnglishLanguage: boolean = true
 
 const videoLink =
-  "https://studio.youtube.com/video/uJQIUjToVHU/translations";
+  "https://studio.youtube.com/video/3J3aJFc81Zw/edit";
 
 test('Publish missing YouTube Studio translations', async () => {
 
