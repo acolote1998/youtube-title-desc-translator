@@ -2,8 +2,8 @@ import { test, chromium, expect } from '@playwright/test';
 import fs from "fs";
 import path from 'path';
 import { hashtagsArray } from '../utils/hashtags';
-import { cargarTraducciones, cleanCookies, goToTranslations, log, pressTab, shuffleArray } from '../utils/utils'
-import { videoLinks } from '../utils/videoLinks';
+import { cargarTraducciones, cleanCookies, goToTranslations, log, parseReleaseDate, pressTab, shuffleArray } from '../utils/utils'
+import { videoData } from '../utils/videoData';
 
 test.setTimeout(300 * 600 * 10000);
 
@@ -221,9 +221,19 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
     let baseHashtags = [...hashtagsArray]
 
-    if (videoLinks.length === 0 || !videoLinks[0]) { throw new Error("No videos found!") }
+    if (videoData.length === 0 || !videoData[0]) { throw new Error("No videos found!") }
 
-    for (const videoLink of videoLinks) {
+    for (const videoObject of videoData) {
+
+      if (!/^\d{2}\/\d{2}\/\d{4}$/.test(videoObject.releaseDate)) {
+        log(`⚠️ Invalid releaseDate format: ${videoObject.releaseDate} - skipping`)
+        continue
+      }
+
+      if (new Date() < parseReleaseDate(videoObject.releaseDate)) {
+        log(`⚠️ Video ${videoObject.videoName} - ${videoObject.link} not released yet (releasing ${videoObject.releaseDate} - skipping)`)
+        continue
+      }
 
       let shuffledHashtags = shuffleArray(baseHashtags)
 
@@ -233,7 +243,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
         hashtagsString += ("#" + hashtag + " ")
       }
 
-      const videoId = videoLink.split("/")[4];
+      const videoId = videoObject.link.split("/")[4];
 
       log(`🎬 Starting hashtag shuffle run — Video ID: ${videoId}`);
 
@@ -296,8 +306,8 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
               page.locator("tr#row-container").filter({ hasText: translation.languageInYoutube })
             ).toBeVisible();
           } catch {
-            missingLanguageErrors.push(`⚠️ Missing translation row — https://studio.youtube.com/video/${videoId}/translations | Language: ${translation.languageInYoutube}`)
-            log(`⚠️ Missing translation row — Video: ${videoId} | Language: ${translation.languageInYoutube}`);
+            missingLanguageErrors.push(`⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${translation.languageInYoutube}`)
+            log(`⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${translation.languageInYoutube}`);
             continue;
           }
 

@@ -2,6 +2,16 @@ import { YoutubeTranslation } from "../types/types";
 import fs from "fs";
 import path from 'path';
 
+export const parseReleaseDate = (dateString: string): Date => {
+    const [day, month, year] = dateString.split('/')
+
+    return new Date(
+        Number(year),
+        Number(month) - 1,
+        Number(day)
+    )
+}
+
 export function shuffleArray(arr: Array<string>) {
     const a = [...arr]; // avoid mutating original
 
