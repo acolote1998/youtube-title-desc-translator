@@ -2,6 +2,16 @@ import { YoutubeTranslation } from "../types/types";
 import fs from "fs";
 import path from 'path';
 
+const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+export async function countdown(seconds: number, message = "Starting in") {
+    for (let i = seconds; i > 0; i--) {
+        process.stdout.write(`\r${message} ${i}s   `);
+        await sleep(1000);
+    }
+    process.stdout.write(`\r${message} GO!        \n`);
+}
+
 export const parseReleaseDate = (dateString: string): Date => {
     const [day, month, year] = dateString.split('/')
 

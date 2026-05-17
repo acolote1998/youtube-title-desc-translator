@@ -2,17 +2,21 @@ import { test, chromium, expect } from '@playwright/test';
 import fs from "fs";
 import path from 'path';
 import { hashtagsArray } from '../utils/hashtags';
-import { cargarTraducciones, cleanCookies, goToTranslations, log, parseReleaseDate, pressTab, shuffleArray } from '../utils/utils'
+import { cargarTraducciones, cleanCookies, countdown, goToTranslations, log, parseReleaseDate, pressTab, shuffleArray } from '../utils/utils'
 import { videoData } from '../utils/videoData';
 
 test.setTimeout(300 * 600 * 10000);
 
-let PROCESSING_MODE: "TRANSLATION" | "HASHTAG_SHUFFLE" = 'TRANSLATION'
+let PROCESSING_MODE: "TRANSLATION" | "HASHTAG_SHUFFLE" = 'HASHTAG_SHUFFLE'
 
 if (PROCESSING_MODE === 'TRANSLATION') {
-  test('Publish missing YouTube Studio translations', async () => {
 
+  test('Publish missing YouTube Studio translations', async () => {
     const translateEnglishLanguage: boolean = true
+
+    log(`⚠️ YOU ARE ABOUT TO EXECUTE TRANSLATION MODE. \n\n CONFIGURATION: TRANSLATE ENGLISH TOO?: ${translateEnglishLanguage ? "YES" : "NO"}\n\n`);
+
+    await countdown(10)
 
     const videoLink =
       "https://studio.youtube.com/video/OGOlNpikwzo/translations";
@@ -187,6 +191,10 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 
 if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
   test('Shuffle hashtags', async () => {
+
+    log(`⚠️ YOU ARE ABOUT TO EXECUTE HASTAG SHUFFLE MODE. \n\n`);
+
+    await countdown(10)
 
     const browser = await chromium.launch({
       headless: false,
