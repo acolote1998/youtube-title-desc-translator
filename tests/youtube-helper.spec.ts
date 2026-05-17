@@ -188,6 +188,35 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
   test('Shuffle hashtags', async () => {
 
+    const browser = await chromium.launch({
+      headless: false,
+      channel: 'chrome',
+    });
+
+    const context = await browser.newContext();
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    const page = await context.newPage();
+
+    log("🍪 Loading authentication cookies...");
+
+    const youtubeCookies = JSON.parse(
+      fs.readFileSync(
+        path.join(process.cwd(), "utils", "cookies", "youtube-cookies.json"),
+        'utf-8'
+      )
+    );
+
+    const googleCookies = JSON.parse(
+      fs.readFileSync(
+        path.join(process.cwd(), "utils", "cookies", "google-cookies.json"),
+        'utf-8'
+      )
+    );
+
+    await context.addCookies(
+      cleanCookies([...youtubeCookies, ...googleCookies])
+    );
+
     let missingLanguageErrors: Array<string> = []
 
     let baseHashtags = [...hashtagsArray]
@@ -210,34 +239,6 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
       let traducciones = await cargarTraducciones();
 
-      const browser = await chromium.launch({
-        headless: false,
-        channel: 'chrome',
-      });
-
-      const context = await browser.newContext();
-      await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-      const page = await context.newPage();
-
-      log("🍪 Loading authentication cookies...");
-
-      const youtubeCookies = JSON.parse(
-        fs.readFileSync(
-          path.join(process.cwd(), "utils", "cookies", "youtube-cookies.json"),
-          'utf-8'
-        )
-      );
-
-      const googleCookies = JSON.parse(
-        fs.readFileSync(
-          path.join(process.cwd(), "utils", "cookies", "google-cookies.json"),
-          'utf-8'
-        )
-      );
-
-      await context.addCookies(
-        cleanCookies([...youtubeCookies, ...googleCookies])
-      );
 
       log("🌐 Opening YouTube Studio translations...");
 
@@ -361,9 +362,8 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
           console.error(error);
         }
       }
-
-      await browser.close();
     }
+    await browser.close();
     missingLanguageErrors.forEach(item => log(item));
     log("🏁 Hashtag shuffle run completed");
   });
