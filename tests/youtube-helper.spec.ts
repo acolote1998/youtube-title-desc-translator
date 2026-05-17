@@ -296,7 +296,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
               page.locator("tr#row-container").filter({ hasText: translation.languageInYoutube })
             ).toBeVisible();
           } catch {
-            missingLanguageErrors.push(`⚠️ Missing translation row — https://studio.youtube.com/${videoId}/X-kRHMBMT0o/translations | Language: ${translation.languageInYoutube}`)
+            missingLanguageErrors.push(`⚠️ Missing translation row — https://studio.youtube.com/video/${videoId}/translations | Language: ${translation.languageInYoutube}`)
             log(`⚠️ Missing translation row — Video: ${videoId} | Language: ${translation.languageInYoutube}`);
             continue;
           }
