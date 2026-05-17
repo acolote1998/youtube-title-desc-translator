@@ -67,5 +67,10 @@ export const videoData: VideoData[] = [
         link: 'https://studio.youtube.com/video/30b8Vidu8U0/edit',
         videoName: 'Simple Easy Sourdough Bread',
         releaseDate: '30/04/2026'
+    },
+    {
+        link: 'https://studio.youtube.com/video/ZWjZIklOGsw/edit',
+        videoName: 'Easy Czech Rye Sourdough Bread',
+        releaseDate: '30/04/2026'
     }
 ]

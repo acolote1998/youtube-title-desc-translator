@@ -7,7 +7,7 @@ import { videoData } from '../utils/videoData';
 
 test.setTimeout(300 * 600 * 10000);
 
-let PROCESSING_MODE: "TRANSLATION" | "HASHTAG_SHUFFLE" = 'HASHTAG_SHUFFLE'
+let PROCESSING_MODE: "TRANSLATION" | "HASHTAG_SHUFFLE" = 'TRANSLATION'
 
 if (PROCESSING_MODE === 'TRANSLATION') {
   test('Publish missing YouTube Studio translations', async () => {
@@ -15,7 +15,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
     const translateEnglishLanguage: boolean = true
 
     const videoLink =
-      "https://studio.youtube.com/video/3J3aJFc81Zw/edit";
+      "https://studio.youtube.com/video/OGOlNpikwzo/translations";
 
     const videoId = videoLink.split("/")[4];
 
@@ -26,7 +26,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
     let hashtagsString = '\n \n '
 
     for (const hashtag of baseHashtags) {
-      hashtagsString += hashtag
+      hashtagsString += ("#" + hashtag + " ")
     }
 
     let traducciones = await cargarTraducciones();
