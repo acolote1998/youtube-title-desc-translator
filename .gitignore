@@ -18,3 +18,4 @@ build/
 utils/cookies/youtube-cookies.json
 utils/cookies/google-cookies.json
 utils/hashtags.ts
+utils/videoLinks.ts
