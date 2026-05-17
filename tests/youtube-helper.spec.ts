@@ -4,6 +4,8 @@ import path from 'path';
 import { hashtagsArray } from '../utils/hashtags';
 import { cargarTraducciones, cleanCookies, goToTranslations, log, pressTab, shuffleArray } from '../utils/utils'
 
+test.setTimeout(300 * 600 * 10000);
+
 let PROCESSING_MODE: "TRANSLATION" | "HASHTAG_SHUFFLE" = 'HASHTAG_SHUFFLE'
 
 if (PROCESSING_MODE === 'TRANSLATION') {
@@ -185,7 +187,12 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
   test('Shuffle hashtags', async () => {
 
-    const videoLinks = ['https://studio.youtube.com/video/30b8Vidu8U0/edit']
+    let missingLanguageErrors: Array<string> = []
+
+    const videoLinks = ['https://studio.youtube.com/video/uJQIUjToVHU/edit',
+      'https://studio.youtube.com/video/X-kRHMBMT0o/edit',
+      'https://studio.youtube.com/video/VJPD0xpKLmg/edit'
+    ]
 
     let baseHashtags = [...hashtagsArray]
 
@@ -292,6 +299,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
               page.locator("tr#row-container").filter({ hasText: translation.languageInYoutube })
             ).toBeVisible();
           } catch {
+            missingLanguageErrors.push(`⚠️ Missing translation row — https://studio.youtube.com/${videoId}/X-kRHMBMT0o/translations | Language: ${translation.languageInYoutube}`)
             console.log(`⚠️ Missing translation row — Video: ${videoId} | Language: ${translation.languageInYoutube}`);
             continue;
           }
@@ -359,8 +367,8 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
       }
 
       await browser.close();
-
-      log("🏁 Hashtag shuffle run completed");
     }
+    missingLanguageErrors.forEach(item => console.log(item));
+    log("🏁 Hashtag shuffle run completed");
   });
 }
