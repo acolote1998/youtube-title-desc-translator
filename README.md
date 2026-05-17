@@ -26,6 +26,7 @@ This project supports two processing modes:
 
 - Loads saved cookies and opens YouTube Studio translations
 - Reads existing translations
+- Loads configured video entries from `utils/videoData.ts` as objects containing `link`, `videoName`, and `releaseDate`
 - Randomly shuffles the hashtag array each run
 - Rebuilds the hashtag string dynamically
 - Updates:
@@ -34,7 +35,7 @@ This project supports two processing modes:
 - Strips existing hashtags before applying the shuffled set
 - Publishes updated descriptions per language
 
-> This mode allows periodic hashtag refreshes without changing the core translation content.
+> This mode allows periodic hashtag refreshes while preserving the current translation content.
 
 ---
 
@@ -118,11 +119,11 @@ Each translation entry must follow this structure:
 1. Export cookies from YouTube + Google
 2. Place them in `utils/cookies/`
 3. Prepare translation JSON files
-4. Set the target `videoLink` in the script
+4. Configure the target video in `utils/videoData.ts` as an object with `link`, `videoName`, and `releaseDate`
 5. Choose mode:
 
 ```ts
-let PROCESSING_MODE: "TRANSLATION" | "HASHTAG_SHUFFLE"
+let PROCESSING_MODE: "TRANSLATION" | "HASHTAG_SHUFFLE";
 ```
 
 ### Install dependencies
