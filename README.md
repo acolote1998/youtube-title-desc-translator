@@ -119,7 +119,7 @@ Each translation entry must follow this structure:
 1. Export cookies from YouTube + Google
 2. Place them in `utils/cookies/`
 3. Prepare translation JSON files
-4. Configure the target video in `utils/videoData.ts` as an object with `link`, `videoName`, and `releaseDate`
+4. Configure the target +o in `utils/videoData.ts` as an object with `link`, `videoName`, and `releaseDate`
 5. Choose mode:
 
 ```ts
