@@ -296,7 +296,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
             ).toBeVisible();
           } catch {
             missingLanguageErrors.push(`⚠️ Missing translation row — https://studio.youtube.com/${videoId}/X-kRHMBMT0o/translations | Language: ${translation.languageInYoutube}`)
-            console.log(`⚠️ Missing translation row — Video: ${videoId} | Language: ${translation.languageInYoutube}`);
+            log(`⚠️ Missing translation row — Video: ${videoId} | Language: ${translation.languageInYoutube}`);
             continue;
           }
 
@@ -364,7 +364,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
       await browser.close();
     }
-    missingLanguageErrors.forEach(item => console.log(item));
+    missingLanguageErrors.forEach(item => log(item));
     log("🏁 Hashtag shuffle run completed");
   });
 }
