@@ -2,6 +2,17 @@ import { YoutubeTranslation } from "../types/types";
 import fs from "fs";
 import path from 'path';
 
+export function shuffleArray(arr: Array<string>) {
+    const a = [...arr]; // avoid mutating original
+
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+
+    return a;
+}
+
 export async function pressTab(page: any, times: number) {
     for (let i = 0; i < times; i++) {
         await page.keyboard.press("Tab");

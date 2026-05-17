@@ -1,1 +1,1 @@
-export const hashtags = "include your hashtags here"
+export const hashtagsArray = ["include your hashtags here"]
