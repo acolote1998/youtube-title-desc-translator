@@ -189,9 +189,20 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
     let missingLanguageErrors: Array<string> = []
 
-    const videoLinks = ['https://studio.youtube.com/video/uJQIUjToVHU/edit',
-      'https://studio.youtube.com/video/X-kRHMBMT0o/edit',
-      'https://studio.youtube.com/video/VJPD0xpKLmg/edit'
+    const videoLinks = [
+      'https://studio.youtube.com/video/uJQIUjToVHU/edit', // Easy Pie Crust
+      'https://studio.youtube.com/video/X-kRHMBMT0o/edit', // Easy Blueberry Crumble Pie
+      'https://studio.youtube.com/video/VJPD0xpKLmg/edit', // Easy Sourdough Bread
+      'https://studio.youtube.com/video/XjwHcYTNLpY/edit', // Easy Sourdough Bread with Garlic & Rosemary
+      'https://studio.youtube.com/video/FeLJeJUgGF0/edit', // Easy Sourdough Garlic Butter Bread
+      'https://studio.youtube.com/video/AHfaZwhfoTw/edit', // Stop Wasting Sourdough Discard
+      'https://studio.youtube.com/video/ljb1rqQnE2c/edit', // Easy Sourdough Bread with Green Olives
+      'https://studio.youtube.com/video/obVbBcMaqpA/edit', // Easy Sourdough Bread
+      'https://studio.youtube.com/video/nZUDifYzd5c/edit', // Easy Same-Day Sourdough Focaccia
+      'https://studio.youtube.com/video/3J3aJFc81Zw/edit', // Feed your sourdough starter like this...
+      'https://studio.youtube.com/video/J2nd4WMR4zU/edit', // Easy Sourdough Bread
+      'https://studio.youtube.com/video/OGOlNpikwzo/edit', // Easy Sourdough Bread
+      'https://studio.youtube.com/video/30b8Vidu8U0/edit' // OLDEST - Simple Easy Sourdough Bread
     ]
 
     let baseHashtags = [...hashtagsArray]
