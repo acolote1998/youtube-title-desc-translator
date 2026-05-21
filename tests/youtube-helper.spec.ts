@@ -3,8 +3,9 @@ import fs from "fs";
 import path from 'path';
 import { hashtagsArray } from '../utils/hashtags';
 import { cargarTraducciones, cleanCookies, countdown, goToTranslations, log, parseReleaseDate, pressTab, shuffleArray } from '../utils/utils'
-import { languagesToShuffleHashtagsFor, videoData } from '../utils/videoData';
+import { videoData } from '../utils/videoData';
 import { ProcessingType } from '../types/types';
+import { languagesToShuffleHashtagsFor } from '../utils/languages';
 
 test.setTimeout(300 * 600 * 10000);
 
@@ -320,12 +321,15 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
             await page.waitForTimeout(7000);
 
+            await goToTranslations(page, videoId);
+
+            await page.waitForTimeout(5000);
+
             continue;
           }
 
           log(`        🌍 Processing hashtags for language: ${language}`);
 
-          await goToTranslations(page, videoId);
 
           try {
             await expect(
