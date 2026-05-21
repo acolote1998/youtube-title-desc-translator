@@ -238,7 +238,13 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
     if (videoData.length === 0 || !videoData[0]) { throw new Error("No videos found!") }
 
-    for (const videoObject of videoData) {
+    const sortedVideoData = [...videoData].sort(
+      (a, b) =>
+        parseReleaseDate(b.releaseDate).getTime() -
+        parseReleaseDate(a.releaseDate).getTime()
+    );
+
+    for (const videoObject of sortedVideoData) {
       videoIndex++;
       if (!/^\d{2}\/\d{2}\/\d{4}$/.test(videoObject.releaseDate)) {
         log(`        ⚠️ Invalid releaseDate format: ${videoObject.releaseDate} - skipping`)
