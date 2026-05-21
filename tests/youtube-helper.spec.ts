@@ -239,7 +239,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
     if (videoData.length === 0 || !videoData[0]) { throw new Error("No videos found!") }
 
     for (const videoObject of videoData) {
-
+      videoIndex++;
       if (!/^\d{2}\/\d{2}\/\d{4}$/.test(videoObject.releaseDate)) {
         log(`        ⚠️ Invalid releaseDate format: ${videoObject.releaseDate} - skipping`)
         continue
@@ -260,9 +260,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
       const videoId = videoObject.link.split("/")[4];
 
-      log(`        🎬 Starting hashtag shuffle run — Video ID: ${videoId}`);
-
-      videoIndex++;
+      log(`🎬 Starting hashtag shuffle run — Video ID: ${videoId}`);
 
 
       log("        🌐 Opening YouTube Studio translations...");
