@@ -175,7 +175,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 
         await page
           .getByRole("button", { name: "Publicar" })
-          .click({ timeout: 5000 });
+          .click({ timeout: 15000 });
 
         await page.waitForTimeout(7000);
 
@@ -392,7 +392,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
           await page
             .getByRole("button", { name: "Publicar" })
-            .click({ timeout: 5000 });
+            .click({ timeout: 15000 });
 
           await page.waitForTimeout(7000);
 
