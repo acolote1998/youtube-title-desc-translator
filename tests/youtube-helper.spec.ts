@@ -236,15 +236,9 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
     let videoIndex = 0;
 
-    const startTime = Date.now();
-
-    let completedVideos = 0;
-
     if (videoData.length === 0 || !videoData[0]) { throw new Error("No videos found!") }
 
     for (const videoObject of videoData) {
-
-      const videoStart = Date.now();
 
       if (!/^\d{2}\/\d{2}\/\d{4}$/.test(videoObject.releaseDate)) {
         log(`        ⚠️ Invalid releaseDate format: ${videoObject.releaseDate} - skipping`)
@@ -405,22 +399,6 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
           console.error(error);
         }
       }
-
-      completedVideos++;
-
-      const videoDuration = Date.now() - videoStart;
-
-      const avgTimePerVideo = (Date.now() - startTime) / completedVideos;
-
-      const remainingVideos = videoData.length - completedVideos;
-
-      const estimatedRemainingMs = avgTimePerVideo * remainingVideos;
-
-      const eta = new Date(Date.now() + estimatedRemainingMs);
-
-      log(`⏱ Video took ${(videoDuration / 1000 / 60).toFixed(1)} min`);
-      log(`📊 ETA finish: ${eta.toLocaleString()}`);
-
     }
     await browser.close();
     missingLanguageErrors.forEach(item => log(item));
