@@ -3,7 +3,7 @@ import fs from "fs";
 import path from 'path';
 import { hashtagsArray } from '../utils/hashtags';
 import { cargarTraducciones, cleanCookies, countdown, goToTranslations, log, parseReleaseDate, pressTab, shuffleArray } from '../utils/utils'
-import { videoData } from '../utils/videoData';
+import { languagesToShuffleHashtagsFor, videoData } from '../utils/videoData';
 import { ProcessingType } from '../types/types';
 
 test.setTimeout(300 * 600 * 10000);
@@ -263,8 +263,6 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
       videoIndex++;
 
-      let traducciones = await cargarTraducciones();
-
 
       log("        🌐 Opening YouTube Studio translations...");
 
@@ -272,10 +270,10 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
       await page.waitForTimeout(7000);
 
-      const totalLanguages = traducciones.length;
+      const totalLanguages = languagesToShuffleHashtagsFor.length;
       let languageIndex = 0;
 
-      for (const translation of traducciones) {
+      for (const language of languagesToShuffleHashtagsFor) {
 
         languageIndex++;
 
@@ -286,12 +284,12 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
         );
 
         try {
-          if (translation.languageInYoutube === "Inglés") {
+          if (language === "Inglés") {
             log("        ✏️ Updating English description with shuffled hashtags...");
 
             const languageRow = page
               .locator("tr#row-container")
-              .filter({ hasText: translation.languageInYoutube });
+              .filter({ hasText: language });
 
             await languageRow
               .locator("#cell-container").first()
@@ -325,23 +323,23 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
             continue;
           }
 
-          log(`        🌍 Processing hashtags for language: ${translation.languageInYoutube}`);
+          log(`        🌍 Processing hashtags for language: ${language}`);
 
           await goToTranslations(page, videoId);
 
           try {
             await expect(
-              page.locator("tr#row-container").filter({ hasText: translation.languageInYoutube })
+              page.locator("tr#row-container").filter({ hasText: language })
             ).toBeVisible();
           } catch {
-            missingLanguageErrors.push(`⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${translation.languageInYoutube}`)
-            log(`        ⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${translation.languageInYoutube}`);
+            missingLanguageErrors.push(`⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${language}`)
+            log(`        ⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${language}`);
             continue;
           }
 
           const languageRow = page
             .locator("tr#row-container")
-            .filter({ hasText: translation.languageInYoutube });
+            .filter({ hasText: language });
 
           await languageRow
             .locator("#cell-container").first()
@@ -352,7 +350,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
           await page.keyboard.press("Tab");
           await page.keyboard.press("Enter");
 
-          log(`        📝 Opening editor — ${translation.languageInYoutube}`);
+          log(`        📝 Opening editor — ${language}`);
 
           await page.waitForTimeout(1000);
 
@@ -393,10 +391,10 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
           await page.waitForTimeout(7000);
 
-          log(`✅ Successfully published updated hashtags — ${translation.languageInYoutube}`);
+          log(`✅ Successfully published updated hashtags — ${language}`);
 
         } catch (error) {
-          log(`❌ Failed: ${translation.languageInYoutube}`);
+          log(`❌ Failed: ${language}`);
           console.error(error);
         }
       }
