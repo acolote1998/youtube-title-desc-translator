@@ -9,3 +9,5 @@ export type VideoData = {
     videoName: string
     releaseDate: string
 }
+
+export type ProcessingType = "TRANSLATION" | "HASHTAG_SHUFFLE"

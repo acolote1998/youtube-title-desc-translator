@@ -4,10 +4,12 @@ import path from 'path';
 import { hashtagsArray } from '../utils/hashtags';
 import { cargarTraducciones, cleanCookies, countdown, goToTranslations, log, parseReleaseDate, pressTab, shuffleArray } from '../utils/utils'
 import { videoData } from '../utils/videoData';
+import { ProcessingType } from '../types/types';
 
 test.setTimeout(300 * 600 * 10000);
 
-let PROCESSING_MODE: "TRANSLATION" | "HASHTAG_SHUFFLE" = 'HASHTAG_SHUFFLE'
+
+let PROCESSING_MODE: ProcessingType = 'HASHTAG_SHUFFLE'
 
 if (PROCESSING_MODE === 'TRANSLATION') {
 
