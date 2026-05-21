@@ -231,17 +231,21 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
     let baseHashtags = [...hashtagsArray]
 
+    const totalVideos = videoData.length;
+
+    let videoIndex = 0;
+
     if (videoData.length === 0 || !videoData[0]) { throw new Error("No videos found!") }
 
     for (const videoObject of videoData) {
 
       if (!/^\d{2}\/\d{2}\/\d{4}$/.test(videoObject.releaseDate)) {
-        log(`⚠️ Invalid releaseDate format: ${videoObject.releaseDate} - skipping`)
+        log(`        ⚠️ Invalid releaseDate format: ${videoObject.releaseDate} - skipping`)
         continue
       }
 
       if (new Date() < parseReleaseDate(videoObject.releaseDate)) {
-        log(`⚠️ Video ${videoObject.videoName} - ${videoObject.link} not released yet (releasing ${videoObject.releaseDate} - skipping)`)
+        log(`        ⚠️ Video ${videoObject.videoName} - ${videoObject.link} not released yet (releasing ${videoObject.releaseDate} - skipping)`)
         continue
       }
 
@@ -255,21 +259,35 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
       const videoId = videoObject.link.split("/")[4];
 
-      log(`🎬 Starting hashtag shuffle run — Video ID: ${videoId}`);
+      log(`        🎬 Starting hashtag shuffle run — Video ID: ${videoId}`);
+
+      videoIndex++;
 
       let traducciones = await cargarTraducciones();
 
 
-      log("🌐 Opening YouTube Studio translations...");
+      log("        🌐 Opening YouTube Studio translations...");
 
       await goToTranslations(page, videoId);
 
       await page.waitForTimeout(7000);
 
+      const totalLanguages = traducciones.length;
+      let languageIndex = 0;
+
       for (const translation of traducciones) {
+
+        languageIndex++;
+
+        log(
+          `📊 Video progress: ${videoIndex}/${totalVideos} (${Math.round((videoIndex / totalVideos) * 100)}%) | ` +
+          `Language progress: ${languageIndex}/${totalLanguages} ` +
+          `(${Math.round((languageIndex / totalLanguages) * 100)}%)`
+        );
+
         try {
           if (translation.languageInYoutube === "Inglés") {
-            log("✏️ Updating English description with shuffled hashtags...");
+            log("        ✏️ Updating English description with shuffled hashtags...");
 
             const languageRow = page
               .locator("tr#row-container")
@@ -300,14 +318,14 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
               .getByRole("button", { name: "Guardar" })
               .click({ timeout: 5000 });
 
-            log("💾 English version saved");
+            log("        💾 English version saved");
 
             await page.waitForTimeout(7000);
 
             continue;
           }
 
-          log(`🌍 Processing hashtags for language: ${translation.languageInYoutube}`);
+          log(`        🌍 Processing hashtags for language: ${translation.languageInYoutube}`);
 
           await goToTranslations(page, videoId);
 
@@ -317,7 +335,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
             ).toBeVisible();
           } catch {
             missingLanguageErrors.push(`⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${translation.languageInYoutube}`)
-            log(`⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${translation.languageInYoutube}`);
+            log(`        ⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${translation.languageInYoutube}`);
             continue;
           }
 
@@ -334,7 +352,7 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
           await page.keyboard.press("Tab");
           await page.keyboard.press("Enter");
 
-          log(`📝 Opening editor — ${translation.languageInYoutube}`);
+          log(`        📝 Opening editor — ${translation.languageInYoutube}`);
 
           await page.waitForTimeout(1000);
 
