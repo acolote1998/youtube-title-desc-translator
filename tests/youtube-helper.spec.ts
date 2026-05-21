@@ -321,20 +321,17 @@ if (PROCESSING_MODE === 'HASHTAG_SHUFFLE') {
 
             await page.waitForTimeout(7000);
 
-            await goToTranslations(page, videoId);
-
-            await page.waitForTimeout(5000);
-
             continue;
           }
 
           log(`        🌍 Processing hashtags for language: ${language}`);
 
+          await goToTranslations(page, videoId);
 
           try {
             await expect(
               page.locator("tr#row-container").filter({ hasText: language })
-            ).toBeVisible();
+            ).toBeVisible({ timeout: 15000 });
           } catch {
             missingLanguageErrors.push(`⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${language}`)
             log(`        ⚠️ Missing translation row - ${videoObject.videoName} - https://studio.youtube.com/video/${videoId}/translations | Language: ${language}`);
