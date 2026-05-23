@@ -36,11 +36,12 @@ if (PROCESSING_MODE === 'TRANSLATION') {
       hashtagsString += ("#" + hashtag + " ")
     }
 
-    const sortedTranslations = traducciones; // or sorted if needed
-    const totalVideos = 1; // you currently process 1 video
-    let videoIndex = 0;
 
     let traducciones = await cargarTraducciones();
+
+    let languageIndex = 0;
+
+    const totalLanguages = traducciones.length;
 
     const missingTranslations = languagesToShuffleHashtagsFor.filter(
       lang => !traducciones.some(t => t.languageInYoutube === lang)
@@ -84,6 +85,12 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 
     await page.waitForTimeout(6000);
 
+    languageIndex++;
+    log(
+      `📊 Language progress: ${languageIndex}/${totalLanguages} ` +
+      `(${Math.round((languageIndex / totalLanguages) * 100)}%)`
+    );
+
     if (!translateEnglishLanguage) {
       traducciones = traducciones.filter((traduccion) => { return traduccion.languageInYoutube !== "Inglés" })
     }
@@ -124,11 +131,18 @@ if (PROCESSING_MODE === 'TRANSLATION') {
       }
     }
     for (const translation of traducciones) {
+
       try {
 
         if (translation.languageInYoutube === "Inglés") {
           continue;
         }
+
+        languageIndex++;
+        log(
+          `📊 Language progress: ${languageIndex}/${totalLanguages} ` +
+          `(${Math.round((languageIndex / totalLanguages) * 100)}%)`
+        );
 
         log(`🌍 Procesando idioma: ${translation.languageInYoutube}`);
 
