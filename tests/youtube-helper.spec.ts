@@ -36,7 +36,19 @@ if (PROCESSING_MODE === 'TRANSLATION') {
       hashtagsString += ("#" + hashtag + " ")
     }
 
+    const sortedTranslations = traducciones; // or sorted if needed
+    const totalVideos = 1; // you currently process 1 video
+    let videoIndex = 0;
+
     let traducciones = await cargarTraducciones();
+
+    const missingTranslations = languagesToShuffleHashtagsFor.filter(
+      lang => !traducciones.some(t => t.languageInYoutube === lang)
+    );
+
+    if (missingTranslations.length > 0) {
+      throw new Error(`⚠️ Missing translation languages: ${missingTranslations.toString()}`);
+    }
 
     const browser = await chromium.launch({
       headless: false,
