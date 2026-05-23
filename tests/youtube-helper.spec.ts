@@ -104,7 +104,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 
         await page.waitForTimeout(3000);
 
-        log("✏️ Editando título y descripción en inglés...");
+        log("       ✏️ Editando título y descripción en inglés...");
 
         await pressTab(page, 26)
         await page.keyboard.press("Enter");
@@ -125,7 +125,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
           .getByRole("button", { name: "Guardar" })
           .click({ timeout: 5000 });
 
-        log("💾 Guardado idioma inglés");
+        log("       💾 Guardado idioma inglés");
 
         await page.waitForTimeout(7000);
       }
@@ -144,7 +144,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
           `(${Math.round((languageIndex / totalLanguages) * 100)}%)`
         );
 
-        log(`🌍 Procesando idioma: ${translation.languageInYoutube}`);
+        log(`       🌍 Procesando idioma: ${translation.languageInYoutube}`);
 
         const languageExists = await page
           .locator('div.language-text')
@@ -154,7 +154,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
           .catch(() => false)
 
         if (languageExists) {
-          log(`❌ ${translation.languageInYoutube} already translated, skipping...`);
+          log(`       ❌ ${translation.languageInYoutube} already translated, skipping...`);
           continue
         }
 
@@ -188,7 +188,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
         await page.keyboard.press("Tab");
         await page.keyboard.press("Enter");
 
-        log(`📝 Escribiendo traducción: ${translation.languageInYoutube}`);
+        log(`       📝 Escribiendo traducción: ${translation.languageInYoutube}`);
 
         await page
           .getByRole("textbox", { name: "Título*" })
@@ -205,9 +205,9 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 
         await page.waitForTimeout(7000);
 
-        log(`✅ Publicado: ${translation.languageInYoutube}`);
+        log(`       ✅ Publicado: ${translation.languageInYoutube}`);
       } catch (error) {
-        log(`❌ Failed: ${translation.languageInYoutube}`);
+        log(`       ❌ Failed: ${translation.languageInYoutube}`);
         console.error(error);
       }
     }
