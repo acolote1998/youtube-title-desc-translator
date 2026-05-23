@@ -1,52 +1,48 @@
 # YouTube Title, Description & Hashtag Automation
 
-> Automates YouTube Studio translations and description updates using Playwright.
+> Automates YouTube Studio translations, description updates, and hashtag reshuffling using Playwright.
 
 ---
 
 ## 🚀 What It Does
 
-This project supports two processing modes:
+This project automates two Playwright workflows in YouTube Studio:
 
-- `TRANSLATION` → publishes missing language translations (title + description)
-- `HASHTAG_SHUFFLE` → regenerates and shuffles hashtags in existing descriptions on each run
+- `TRANSLATION` → publishes translated titles and descriptions for a configured video
+- `HASHTAG_SHUFFLE` → refreshes hashtags across configured video translations while preserving existing content
 
 ### 🔧 Processing Modes
 
 #### `TRANSLATION`
 
-- Loads saved cookies and authenticates into YouTube Studio
-- Opens a video’s translation editor
-- Reads pre-generated translations from JSON files
-- Appends a fixed hashtag block to each description
-- Publishes translations for each missing language
-- Optionally updates English first as the base language
+- loads saved YouTube and Google cookies
+- opens a specific video translation editor using the hardcoded `videoLink` in `tests/youtube-helper.spec.ts`
+- merges translation data from `utils/translations/translations1.json` through `translations6.json`
+- appends a fixed hashtag block from `utils/hashtags.ts` to every translated description
+- updates English first when `translateEnglishLanguage` is enabled
+- publishes remaining languages through YouTube Studio
+- validates that every language in `utils/languages.ts` is present in the translation dataset
 
 #### `HASHTAG_SHUFFLE`
 
-- Loads saved cookies and opens YouTube Studio translations
-- Reads existing translations
-- Loads configured video entries from `utils/videoData.ts` as objects containing `link`, `videoName`, and `releaseDate`
-- Randomly shuffles the hashtag array each run
-- Rebuilds the hashtag string dynamically
-- Updates:
-  - English description (save flow)
-  - All other language descriptions (publish flow)
-- Strips existing hashtags before applying the shuffled set
-- Publishes updated descriptions per language
-
-> This mode allows periodic hashtag refreshes while preserving the current translation content.
+- loads saved YouTube and Google cookies
+- sorts `utils/videoData.ts` by `releaseDate`
+- skips videos that are not yet released or have invalid date formats
+- builds a shuffled hashtag string from `utils/hashtags.ts`
+- preserves the original translated text while only rewriting the hashtag block
 
 ---
 
 ## 📁 Key Files
 
-- `tests/youtube-helper.spec.ts` — Main Playwright automation script (both modes)
+- `tests/youtube-helper.spec.ts` — Playwright automation script and mode selection
 - `utils/cookies/youtube-cookies.json` — YouTube authentication cookies
 - `utils/cookies/google-cookies.json` — Google authentication cookies
-- `utils/translations/translations{1-6}.json` — Translation datasets (split for LLM limits)
-- `utils/hashtags.ts` — Base hashtag array used for both fixed and shuffled modes
-- `utils/promptForTranslations.txt` — Prompt template for generating translations
+- `utils/translations/translations{1-6}.json` — translation datasets merged at runtime
+- `utils/hashtags.ts` — hashtag list used in both modes
+- `utils/videoData.ts` — video list and release dates for hashtag shuffle mode
+- `utils/languages.ts` — language list expected by the script
+- `utils/promptForTranslations.txt` — translation prompt template
 
 ---
 
@@ -80,9 +76,11 @@ Each translation entry must follow this structure:
 ]
 ```
 
-- `languageInYoutube` → must match the YouTube Studio language label (e.g. `Inglés`, `Alemán`)
-- `translatedTitle` → translated title text
-- `translatedDescription` → translated description text
+- `languageInYoutube` must match the YouTube Studio language label used in the Spanish UI (for example, `Inglés`, `Alemán`)
+- `translatedTitle` is the translated title string
+- `translatedDescription` is the translated description string
+
+The script merges the six translation files automatically. All languages listed in `utils/languages.ts` must appear in the merged data or translation mode will fail.
 
 > Hashtags are handled automatically in both modes.
 
@@ -92,60 +90,134 @@ Each translation entry must follow this structure:
 
 ### `TRANSLATION`
 
-- Uses the fixed hashtag list from `utils/hashtags.ts`
-- Appends the unchanged hashtag block to all descriptions
+- uses the fixed hashtag list from `utils/hashtags.ts`
+- appends the hashtag block to every translated description
 
 ### `HASHTAG_SHUFFLE`
 
-- Creates a shuffled copy of the hashtag array per run using `shuffleArray(baseHashtags)`
-- Rebuilds the hashtag string dynamically
-- Ensures a different ordering every run
-- Strips existing hashtags before applying the shuffled set
+- shuffles the hashtag list every run
+- rebuilds the hashtag block dynamically
+- strips existing hashtags from the description before applying the new set
+- preserves translated content and only rewrites hashtags
 
 ---
 
 ## ⚙️ Configuration Notes
 
 - Designed for Spanish YouTube Studio UI
-- Locators depend on Spanish labels like `Añadir idioma`, `Guardar`, `Publicar`
+- Uses Spanish UI labels like `Añadir idioma`, `Guardar`, `Publicar`
 - Runs in `headless: false` for visibility and debugging
-- English is treated as a special case in both modes
-- Clipboard-based extraction is used for description rewriting in shuffle mode
+- `TRANSLATION` mode uses a hardcoded `videoLink` inside `tests/youtube-helper.spec.ts`
+- `HASHTAG_SHUFFLE` mode uses `utils/videoData.ts` and requires valid `DD/MM/YYYY` release dates
+- Set `PROCESSING_MODE` in `tests/youtube-helper.spec.ts`
 
 ---
 
-## ▶️ Usage
+## ▶️ How to Use
 
-1. Export cookies from YouTube + Google
-2. Place them in `utils/cookies/`
-3. Prepare translation JSON files
-4. Configure the target +o in `utils/videoData.ts` as an object with `link`, `videoName`, and `releaseDate`
-5. Choose mode:
+This project runs a Playwright automation that publishes YouTube Studio translations and/or reshuffles hashtags across videos.
 
-```ts
-let PROCESSING_MODE: "TRANSLATION" | "HASHTAG_SHUFFLE";
+### 1. Install dependencies
+
 ```
-
-### Install dependencies
-
-```bash
 npm install
 npx playwright install chromium
 ```
 
-### Run tests
+---
 
-```bash
-npm run test
-```
+### 2. Configure processing mode
+
+Open:
+
+`tests/youtube-helper.spec.ts`
+
+Set the mode:
+
+`let PROCESSING_MODE: ProcessingType = 'TRANSLATION'  `
+
+// or
+
+`let PROCESSING_MODE: ProcessingType = 'HASHTAG_SHUFFLE'`
+
+---
+
+### 3. Add cookies (required)
+
+Export cookies using a browser extension like EditThisCookie, then save:
+
+`utils/cookies/youtube-cookies.json  `
+
+`utils/cookies/google-cookies.json`
+
+---
+
+### 4. Configure required data
+
+#### Translation mode requires:
+
+- `utils/translations/translations1.json → translations6.json`
+- `utils/languages.ts` (must include all expected languages)
+- `utils/hashtags.ts`
+- cookies:
+  - `utils/cookies/youtube-cookies.json`
+  - `utils/cookies/google-cookies.json`
+
+#### Hashtag shuffle mode requires:
+
+- `utils/videoData.ts` (video list + valid DD/MM/YYYY release dates)
+- `utils/languages.ts` (must include all expected languages)
+- `utils/hashtags.ts`
+- cookies:
+  - `utils/cookies/youtube-cookies.json`
+  - `utils/cookies/google-cookies.json`
+
+---
+
+### 5. Run the automation
+
+`npm run test`
+
+---
+
+## 🔁 Modes Overview
+
+### TRANSLATION mode
+
+- Opens YouTube Studio video translations page
+- Publishes missing translations from JSON files
+- Optionally updates English first
+- Appends hashtags to every description
+- Validates all languages from utils/languages.ts
+
+---
+
+### HASHTAG_SHUFFLE mode
+
+- Loads videos from utils/videoData.ts
+- Skips unreleased or invalid-date videos
+- Shuffles hashtags per run
+- Updates only hashtag section (preserves translated text)
+- Publishes updated descriptions per language
+
+---
+
+## ⚠️ Notes
+
+- Runs in headless: false (visible browser)
+- Uses Spanish YouTube Studio UI (Añadir idioma, Publicar, etc.)
+- Video target for TRANSLATION mode is hardcoded in the script
+- Ensure cookies are valid or login will fail
 
 ---
 
 ## ✅ Summary
 
-This repository supports:
+This repository automates YouTube Studio translation publishing and hashtag reshuffling.
 
-- Static translation publishing for missing languages
-- Dynamic hashtag reshuffling and re-publication without changing translations
+- `TRANSLATION` publishes translated titles and descriptions with a fixed hashtag block
+- `HASHTAG_SHUFFLE` refreshes hashtag order across configured videos while preserving existing translated content
 
-The `HASHTAG_SHUFFLE` mode rotates hashtags while preserving translation content and publishing flow.
+```
+
+```
