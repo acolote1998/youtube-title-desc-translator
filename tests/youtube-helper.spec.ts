@@ -10,7 +10,7 @@ import { languagesToShuffleHashtagsFor } from '../utils/languages';
 test.setTimeout(300 * 600 * 10000);
 
 
-let PROCESSING_MODE: ProcessingType = 'HASHTAG_SHUFFLE'
+let PROCESSING_MODE: ProcessingType = 'TRANSLATION'
 
 if (PROCESSING_MODE === 'TRANSLATION') {
 
@@ -22,7 +22,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
     await countdown(10)
 
     const videoLink =
-      "https://studio.youtube.com/video/OGOlNpikwzo/translations";
+      "https://studio.youtube.com/video/PjQevg8yyRM/edit";
 
     const videoId = videoLink.split("/")[4];
 
