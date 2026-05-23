@@ -217,7 +217,3 @@ This repository automates YouTube Studio translation publishing and hashtag resh
 
 - `TRANSLATION` publishes translated titles and descriptions with a fixed hashtag block
 - `HASHTAG_SHUFFLE` refreshes hashtag order across configured videos while preserving existing translated content
-
-```
-
-```
