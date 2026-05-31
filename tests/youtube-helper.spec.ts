@@ -22,7 +22,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
     await countdown(10)
 
     const videoLink =
-      "https://studio.youtube.com/video/PjQevg8yyRM/edit";
+      "https://studio.youtube.com/video/vZRrp0nNOSs/edit";
 
     const videoId = videoLink.split("/")[4];
 
