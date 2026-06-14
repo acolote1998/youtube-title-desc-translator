@@ -22,7 +22,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
     await countdown(10)
 
     const videoLink =
-      "https://studio.youtube.com/video/vZRrp0nNOSs/edit";
+      "https://studio.youtube.com/video/Z0DT8x55tog/edit";
 
     const videoId = videoLink.split("/")[4];
 
@@ -106,7 +106,7 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 
         log("       ✏️ Editando título y descripción en inglés...");
 
-        await pressTab(page, 26)
+        await pressTab(page, 25)
         await page.keyboard.press("Enter");
 
         await page
