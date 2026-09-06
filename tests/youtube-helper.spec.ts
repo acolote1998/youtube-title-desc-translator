@@ -19,10 +19,10 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 
     log(`⚠️ YOU ARE ABOUT TO EXECUTE TRANSLATION MODE. \n\n CONFIGURATION: TRANSLATE ENGLISH TOO?: ${translateEnglishLanguage ? "YES" : "NO"}\n\n`);
 
-    await countdown(10)
+    await countdown(3)
 
     const videoLink =
-      "https://studio.youtube.com/video/Z0DT8x55tog/edit";
+      "https://studio.youtube.com/video/b2pHhxe2SUs/edit";
 
     const videoId = videoLink.split("/")[4];
 
@@ -106,9 +106,9 @@ if (PROCESSING_MODE === 'TRANSLATION') {
 
         log("       ✏️ Editando título y descripción en inglés...");
 
-        await pressTab(page, 25)
+        await pressTab(page, 11)
+        await page.waitForTimeout(1500);
         await page.keyboard.press("Enter");
-
         await page
           .getByRole("textbox", {
             name: "Añade un título que describa",
@@ -174,36 +174,32 @@ if (PROCESSING_MODE === 'TRANSLATION') {
         await page.keyboard.type(translation.languageInYoutube[3])
         await page.keyboard.press("Enter");
 
-        const languageRow = page
-          .locator("tr#row-container")
-          .filter({ hasText: translation.languageInYoutube });
-
-        await languageRow
-          .locator("#cell-container").first()
-          .focus();
-
-        await page.waitForTimeout(1000);
-        await page.keyboard.press("Tab");
-        await page.keyboard.press("Tab");
-        await page.keyboard.press("Tab");
-        await page.keyboard.press("Enter");
-
         log(`       📝 Escribiendo traducción: ${translation.languageInYoutube}`);
 
-        await page
-          .getByRole("textbox", { name: "Título*" })
-          .fill(translation.translatedTitle, { timeout: 5000 });
 
-        await page
-          .locator("#translated-description")
-          .getByRole("textbox", { name: "Descripción" })
-          .fill((translation.translatedDescription + hashtagsString), { timeout: 5000 });
+        const titleTextbox = page.locator(
+          'div[contenteditable="true"][aria-label="Título"]'
+        );
 
-        await page
-          .getByRole("button", { name: "Publicar" })
-          .click({ timeout: 15000 });
+        const descriptionTextbox = page.locator(
+          'div[contenteditable="true"][aria-label="Descripción"]'
+        );
 
-        await page.waitForTimeout(7000);
+        await titleTextbox.click();
+        await page.waitForTimeout(500);
+        await titleTextbox.fill(translation.translatedTitle);
+        await page.waitForTimeout(500);
+
+        await descriptionTextbox.click();
+        await page.waitForTimeout(500);
+        await descriptionTextbox.fill(
+          translation.translatedDescription + hashtagsString
+        );
+        await page.waitForTimeout(500);
+
+        await page.getByRole("button", { name: "Actualizar" }).click();
+
+        await page.waitForTimeout(3500);
 
         log(`       ✅ Publicado: ${translation.languageInYoutube}`);
       } catch (error) {

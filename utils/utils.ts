@@ -35,15 +35,15 @@ export function shuffleArray(arr: Array<string>) {
 
 export async function pressTab(page: any, times: number) {
     for (let i = 0; i < times; i++) {
+        await page.waitForTimeout(50);
         await page.keyboard.press("Tab");
+        await page.waitForTimeout(50);
     }
 }
 export async function goToTranslations(page: any, videoId: string) {
     await page.goto(
         `https://studio.youtube.com/video/${videoId}/translations`
     );
-
-    await page.waitForSelector('div.language-text');
 }
 
 export const log = (msg: string) =>
